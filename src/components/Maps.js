@@ -9,7 +9,7 @@ import {
   SkeletonText,
   Text,
 } from "@chakra-ui/react";
-import { FaLocationArrow, FaTimes } from "react-icons/fa";
+import { FaLess, FaLocationArrow, FaTimes } from "react-icons/fa";
 
 import {
   useJsApiLoader,
@@ -20,7 +20,7 @@ import {
 } from "@react-google-maps/api";
 import { useRef, useState } from "react";
 
-const center = { lat: 48.8584, lng: 2.2945 };
+const center = { lat: 35.7219, lng: 51.3347 };
 const apiKey = "AIzaSyASGf3xaQKOEsMZaYET96y4yh0GI9oI4pk"
 
 function Maps() {
@@ -53,7 +53,7 @@ function Maps() {
       origin: originRef.current.value,
       destination: destiantionRef.current.value,
       // eslint-disable-next-line no-undef
-      travelMode: google.maps.TravelMode.DRIVING,
+      travelMode: google.maps.TravelMode.TravelMode,
     });
     setDirectionsResponse(results);
     setDistance(results.routes[0].legs[0].distance.text);
@@ -84,7 +84,7 @@ function Maps() {
           mapContainerStyle={{ width: "100%", height: "100%" }}
           options={{
             zoomControl: false,
-            streetViewControl: false,
+            streetViewControl: true,
             mapTypeControl: false,
             fullscreenControl: false,
           }}
