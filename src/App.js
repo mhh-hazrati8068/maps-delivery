@@ -1,23 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import app from "./firebaseConfig/firebase";
+import { getFirestore, collection, getDocs } from "firebase/firestore";
+import Maps from "./components/Maps";
 
 function App() {
+  const [data, setData] = useState([]);
+  const db = getFirestore(app);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const querySnapshot = await getDocs(collection(db, "bearerParcels"));
+      setData(querySnapshot.docs.map((doc) => doc.data()));
+    };
+
+    fetchData();
+  }, [db]);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Maps />
+      <h1>Firebase Data</h1>
+      <ul>
+        {data.map((item, index) => (
+          <li key={index}>{JSON.stringify(item)}</li>
+        ))}
+      </ul>
     </div>
   );
 }
