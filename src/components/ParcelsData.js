@@ -3,7 +3,7 @@ import { getFirestore, collection, getDocs } from "firebase/firestore";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { useState, useEffect } from "react";
 
-const ParcelData = () => {
+const ParcelData = ({ onParcelSelect }) => {
   const [data, setData] = useState([]);
   const [imageUrls, setImageUrls] = useState([]);
   const db = getFirestore(app);
@@ -16,17 +16,15 @@ const ParcelData = () => {
         const dataItems = querySnapshot.docs.map((doc) => doc.data());
         setData(dataItems);
 
-        // Fetch imagees
+        // Fetch images
         const urls = await Promise.all(
           dataItems.map(async (item) => {
-            // Using 'parcel_img_url' for image path
             if (item.parcel_img_url) {
               const imageRef = ref(storage, item.parcel_img_url);
               try {
                 const url = await getDownloadURL(imageRef);
                 return url;
               } catch (error) {
-                // Handle errors based on the documentation
                 switch (error.code) {
                   case "storage/object-not-found":
                     console.error("File does not exist:", item.parcel_img_url);
@@ -65,11 +63,16 @@ const ParcelData = () => {
     fetchData();
   }, [db, storage]);
 
+  const handleParcelSelect = (parcel) => {
+    onParcelSelect(parcel); // Pass the selected parcel data to the parent component
+  };
+
   return (
     <ul>
       {data.map((item, index) => (
-        <li key={index}>
-          {JSON.stringify(item)}
+        <li key={index} onClick={() => handleParcelSelect(item)}>
+          {JSON.stringify(item.parcel_description)}
+          {JSON.stringify(item.parcel_type)}
           {imageUrls[index] && <img src={imageUrls[index]} alt="Firebase" />}
         </li>
       ))}
