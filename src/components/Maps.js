@@ -74,9 +74,9 @@ function Maps() {
       flexDirection="column"
       alignItems="center"
       h="100vh"
-      w="100vw"
+      w= "100vw"
     >
-      <Box position="absolute" left={0} top={0} h="100%" w="100%">
+      <Box position="absolute" right={0} top={0} h="100%" w="45%">
         {/* Google Map Box */}
         <GoogleMap
           center={center}
@@ -84,7 +84,7 @@ function Maps() {
           mapContainerStyle={{ width: "100%", height: "100%" }}
           options={{
             zoomControl: false,
-            streetViewControl: true,
+            streetViewControl: false,
             mapTypeControl: false,
             fullscreenControl: false,
           }}
@@ -97,13 +97,18 @@ function Maps() {
         </GoogleMap>
       </Box>
       <Box
-        p={4}
+        p={1}
         borderRadius="lg"
-        m={4}
+        m={1}
         bgColor="white"
         shadow="base"
         minW="container.md"
         zIndex="1"
+        position="absolute"
+        left={0}
+        top={0}
+        w="50%"
+        h="100vh"
       >
         <HStack spacing={2} justifyContent="space-between">
           <Box flexGrow={1}>
