@@ -2,10 +2,12 @@ import app from "../firebaseConfig/firebase";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { useState, useEffect } from "react";
+import { Box, Image, Text, SimpleGrid, Spinner } from "@chakra-ui/react";
 
 const ParcelData = ({ onParcelSelect }) => {
   const [data, setData] = useState([]);
   const [imageUrls, setImageUrls] = useState([]);
+  const [loading, setLoading] = useState(true); // State to track loading
   const db = getFirestore(app);
   const storage = getStorage(app);
 
@@ -57,6 +59,8 @@ const ParcelData = ({ onParcelSelect }) => {
         setImageUrls(urls);
       } catch (error) {
         console.error("Error fetching data from Firestore:", error);
+      } finally {
+        setLoading(false); // Set loading to false after fetching
       }
     };
 
@@ -67,16 +71,35 @@ const ParcelData = ({ onParcelSelect }) => {
     onParcelSelect(parcel); // Pass the selected parcel data to the parent component
   };
 
+  if (loading) {
+    return <Spinner size="xl" />;
+  }
+
   return (
-    <ul>
+    <SimpleGrid columns={[1, 2, 3]} spacing={4}>
       {data.map((item, index) => (
-        <li key={index} onClick={() => handleParcelSelect(item)}>
-          {JSON.stringify(item.parcel_description)}
-          {JSON.stringify(item.parcel_type)}
-          {imageUrls[index] && <img src={imageUrls[index]} alt="Firebase" />}
-        </li>
+        <Box
+          key={index}
+          p={4}
+          borderWidth="1px"
+          borderRadius="lg"
+          overflow="hidden"
+          boxShadow="md"
+          cursor="pointer"
+          onClick={() => handleParcelSelect(item)}
+          _hover={{ bg: "gray.100" }} // Add hover effect
+        >
+          {imageUrls[index] && (
+            <Image src={imageUrls[index]} alt="Parcel Image" mb={4} />
+          )}
+          <Text fontWeight="bold">{item.parcel_type}</Text>
+          <Text>{item.parcel_description}</Text>
+          <Text fontSize="sm" color="gray.500">
+            Weight: {item.parcel_min_weight}kg - {item.parcel_max_weight}kg
+          </Text>
+        </Box>
       ))}
-    </ul>
+    </SimpleGrid>
   );
 };
 

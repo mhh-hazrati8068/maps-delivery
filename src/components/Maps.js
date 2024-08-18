@@ -5,7 +5,7 @@ import {
   VStack,
   Input,
   SkeletonText,
-  Button
+  Button,
 } from "@chakra-ui/react";
 import {
   useJsApiLoader,
@@ -117,7 +117,7 @@ function Maps() {
       h="100vh"
       w="100vw"
     >
-      <Box position="absolute" right={0} top={0} h="100%" w="45%">
+      <Box position="absolute" right={0} top={0} h="100%" w="55vw" p={2}>
         <GoogleMap
           zoom={10}
           center={initialCenter}
@@ -167,7 +167,7 @@ function Maps() {
       </Box>
       <Box
         p={1}
-        borderRadius="lg"
+        borderRadius="sm"
         m={1}
         bgColor="white"
         shadow="base"
@@ -176,14 +176,56 @@ function Maps() {
         position="absolute"
         left={0}
         top={0}
-        w="50%"
+        w="45%"
       >
         <VStack spacing={4} justifyContent="space-between">
-          <Box flexGrow={2} w="100%">
+          <Box flexGrow={2} w="80%" m={2} p={4}>
             <Autocomplete>
-              <Input type="text" placeholder="Origin" ref={originRef} />
+              <Input
+                type="text"
+                placeholder="Origin"
+                ref={originRef}
+                m={2}
+                p={4}
+                borderRadius={0}
+                borderBottom="1px"
+                borderBottomColor="gray"
+                border={0}
+                background="lightgray"
+              />
             </Autocomplete>
-            <Button colorScheme="blue" onClick={setOrigin}>
+            <Input
+              type="text"
+              placeholder="More Details / Massage For The Rider"
+              m={2}
+              p={4}
+              borderRadius={0}
+              borderBottom="1px"
+              borderBottomColor="gray"
+              border={0}
+              background="lightgray"
+            />
+            <HStack m={2}>
+              <Input
+                type="number"
+                placeholder="phone number"
+                borderRadius={0}
+                borderBottom="1px"
+                borderBottomColor="gray"
+                border={0}
+                background="lightgray"
+              />
+              <Input
+                type="text"
+                placeholder="sender's name"
+                borderRadius={0}
+                borderBottom="1px"
+                borderBottomColor="gray"
+                border={0}
+                background="lightgray"
+              />
+            </HStack>
+            <Button colorScheme="blue" onClick={setOrigin} m={2}>
               Set Origin
             </Button>
           </Box>
@@ -191,7 +233,7 @@ function Maps() {
       </Box>
       <Box
         p={1}
-        borderRadius="lg"
+        borderRadius="sm"
         m={1}
         bgColor="white"
         shadow="base"
@@ -199,19 +241,57 @@ function Maps() {
         zIndex="1"
         position="absolute"
         left={0}
-        top="20%"
-        w="50%"
+        top="35%"
+        w="45%"
       >
         <VStack>
-          <Box flexGrow={1}>
+          <Box flexGrow={2} w="80%" m={2} p={4}>
             <Autocomplete>
               <Input
                 type="text"
                 placeholder="Destination"
                 ref={destinationRef}
+                m={2}
+                p={2}
+                borderRadius={0}
+                borderBottom="1px"
+                borderBottomColor="gray"
+                border={0}
+                background="lightgray"
               />
             </Autocomplete>
-            <Button colorScheme="blue" onClick={setDestination}>
+            <Input
+              type="text"
+              placeholder="More Details / Massage For The Rider"
+              m={2}
+              p={4}
+              borderRadius={0}
+              borderBottom="1px"
+              borderBottomColor="gray"
+              border={0}
+              background="lightgray"
+            />
+            <HStack m={2}>
+              <Input
+                type="number"
+                placeholder="phone number"
+                borderRadius={0}
+                borderBottom="1px"
+                borderBottomColor="gray"
+                border={0}
+                background="lightgray"
+              />
+              <Input
+                type="text"
+                placeholder="Recipient name"
+                borderRadius={0}
+                borderBottom="1px"
+                borderBottomColor="gray"
+                border={0}
+                background="lightgray"
+              />
+            </HStack>
+            <Button colorScheme="blue" onClick={setDestination} m={2}>
               Set Destination
             </Button>
           </Box>
@@ -219,34 +299,20 @@ function Maps() {
       </Box>
       <Box
         p={1}
-        borderRadius="lg"
+        borderRadius="sm"
         m={1}
         bgColor="white"
-        shadow="base"
-        minW="container.md"
-        zIndex="1"
-        position="absolute"
-        left={0}
-        top="40%"
-        w="50%"
-      >
-        <HStack>
-          <ParcelData onParcelSelect={setSelectedParcel} />
-        </HStack>
-      </Box>
-      <Box
-        p={1}
-        borderRadius="lg"
-        m={1}
-        bgColor="white"
-        shadow="base"
+        shadow="lg"
         minW="container.md"
         zIndex="1"
         position="absolute"
         left={0}
         top="60%"
-        w="50%"
+        w="45%"
       >
+        <HStack>
+          <ParcelData onParcelSelect={setSelectedParcel} />
+        </HStack>
         <PricingButton
           origin={originPosition}
           destination={destinationPosition}
