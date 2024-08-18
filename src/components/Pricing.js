@@ -41,7 +41,7 @@ const PricingButton = ({ origin, destination, parcel }) => {
   };
 
   return (
-    <Button colorScheme="green" onClick={calculatePrice} isLoading={loading}>
+    <Button bg="transparent" border="1px" borderRadius='3px' borderColor="gray" display="flex" alignSelf="center" m="1rem auto" onClick={calculatePrice} isLoading={loading}>
       Calculate Price
     </Button>
   );

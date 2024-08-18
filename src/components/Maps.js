@@ -6,6 +6,7 @@ import {
   Input,
   SkeletonText,
   Button,
+  Text,
 } from "@chakra-ui/react";
 import {
   useJsApiLoader,
@@ -35,7 +36,12 @@ function Maps() {
   // for detecting and converting the current.value to lat and long
   const [originPosition, setOriginPosition] = useState(null);
   const [destinationPosition, setDestinationPosition] = useState(null);
+  // add state for origin and destination values for stopping the re-rendering for the ref value for displaying
+  const [originValue, setOriginValue] = useState("");
+  const [destinationValue, setDestinationValue] = useState("");
+
   const [selectedParcel, setSelectedParcel] = useState(null); // State to cache the selected parcel
+  const [isEditingParcel, setIsEditingParcel] = useState(false);
 
   const originRef = useRef();
   const destinationRef = useRef();
@@ -58,6 +64,8 @@ function Maps() {
       if (originGeocode.results[0]) {
         const originLatLng = originGeocode.results[0].geometry.location;
         setOriginPosition({ lat: originLatLng.lat(), lng: originLatLng.lng() });
+
+        setOriginValue(originRef.current.value);
 
         map.panTo(originLatLng);
         map.setZoom(15);
@@ -88,6 +96,8 @@ function Maps() {
           lng: destinationLatLng.lng(),
         });
 
+        setDestinationValue(destinationRef.current.value);
+
         if (originPosition) {
           // eslint-disable-next-line no-undef
           const bounds = new google.maps.LatLngBounds();
@@ -108,6 +118,10 @@ function Maps() {
     setDestinationVisiblity(true);
   }
 
+  const handleEditParcelChange = (isEditing) => {
+    setIsEditingParcel(isEditing); // Update the state when editParcel changes
+  };
+
   if (!isLoaded) {
     return <SkeletonText />;
   }
@@ -120,7 +134,7 @@ function Maps() {
       h="100vh"
       w="100vw"
     >
-      <Box h="100%" w="60%" p={2}>
+      <Box h="100%" w="60%">
         <GoogleMap
           zoom={10}
           center={initialCenter}
@@ -168,7 +182,7 @@ function Maps() {
           )}
         </GoogleMap>
       </Box>
-      <Flex flexDirection="column" alignItems="center" h="100vh" w="40vw">
+      <Flex flexDirection="column" alignItems="center" h="100vh" w="40vw" m={2}>
         <Box
           p={1}
           borderRadius="sm"
@@ -179,6 +193,10 @@ function Maps() {
           zIndex="1"
           w="45%"
         >
+          <Text fontSize="lg" fontWeight="bold" m={2}>
+            {" "}
+            Origin
+          </Text>
           {originVisiblity ? (
             <VStack spacing={4} justifyContent="space-between">
               <Box flexGrow={2} w="80%" m={2} p={4}>
@@ -234,28 +252,35 @@ function Maps() {
               </Box>
             </VStack>
           ) : (
-            <div>
-              <div>
-                {originRef.current
-                  ? originRef.current.value
+            <Flex
+              w="100%"
+              p={4}
+              justifyContent="space-between" // This places items on opposite sides
+              alignItems="center"
+            >
+              <Text fontSize="lg">
+                {originValue
+                  ? originValue
                   : "Please select an origin location!"}
-              </div>
-              <button onClick={editOrigin}>
-                {originRef.current ? "edit" : "select origin"}
-              </button>
-            </div>
+              </Text>
+              <button onClick={editOrigin}>Edit</button>
+            </Flex>
           )}
         </Box>
         <Box
           p={1}
           borderRadius="sm"
-          m={1}
+          m={2}
           bgColor="white"
           shadow="base"
           minW="container.md"
           zIndex="1"
           w="45%"
         >
+          <Text fontSize="lg" fontWeight="bold" m={2}>
+            {" "}
+            Destination
+          </Text>
           {destinationVisiblity ? (
             <VStack>
               <Box flexGrow={2} w="80%" m={2} p={4}>
@@ -311,18 +336,19 @@ function Maps() {
               </Box>
             </VStack>
           ) : (
-            <div>
-              <div>
-                {destinationRef.current
-                  ? destinationRef.current.value
+            <Flex
+              w="100%"
+              p={4}
+              justifyContent="space-between" // This places items on opposite sides
+              alignItems="center"
+            >
+              <Text fontSize="lg">
+                {destinationValue
+                  ? destinationValue
                   : "Please select the destination!"}
-              </div>
-              <button onClick={editdestination}>
-                <div>
-                  {destinationRef.current ? "edit" : "select detination"}
-                </div>
-              </button>
-            </div>
+              </Text>
+              <button onClick={editdestination}>Edit</button>
+            </Flex>
           )}
         </Box>
         <Box
@@ -336,13 +362,18 @@ function Maps() {
           w="45%"
         >
           <HStack>
-            <ParcelData onParcelSelect={setSelectedParcel} />
+            <ParcelData
+              onParcelSelect={(parcel) => setSelectedParcel(parcel)}
+              onEditParcelChange={handleEditParcelChange}
+            />
           </HStack>
-          <PricingButton
-            origin={originPosition}
-            destination={destinationPosition}
-            parcel={selectedParcel}
-          />
+          {isEditingParcel && (
+            <PricingButton
+              origin={originPosition}
+              destination={destinationPosition}
+              parcel={selectedParcel}
+            />
+          )}
         </Box>
       </Flex>
     </Flex>
