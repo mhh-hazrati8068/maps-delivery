@@ -20,7 +20,7 @@ import PricingButton from "./Pricing";
 
 const apiKey = "AIzaSyASGf3xaQKOEsMZaYET96y4yh0GI9oI4pk";
 
-const initialCenter = { lat: 40.7128, lng: -74.006 }; // Default to New York City
+const initialCenter = { lat: 40.7128, lng: -74.006 }; // Default to tehran (baraye zibayi va namayesh avaliye map)
 
 function Maps() {
   const { isLoaded } = useJsApiLoader({
@@ -29,9 +29,13 @@ function Maps() {
   });
 
   const [map, setMap] = useState(null);
+  // for toggling the visiblity in boxes
+  const [originVisiblity, setOriginVisiblity] = useState(false);
+  const [destinationVisiblity, setDestinationVisiblity] = useState(false);
+  // for detecting and converting the current.value to lat and long
   const [originPosition, setOriginPosition] = useState(null);
   const [destinationPosition, setDestinationPosition] = useState(null);
-  const [selectedParcel, setSelectedParcel] = useState(null); // State to store selected parcel
+  const [selectedParcel, setSelectedParcel] = useState(null); // State to cache the selected parcel
 
   const originRef = useRef();
   const destinationRef = useRef();
@@ -58,9 +62,13 @@ function Maps() {
         map.panTo(originLatLng);
         map.setZoom(15);
       }
+      setOriginVisiblity(false);
     } catch (error) {
       console.error("Geocoding error: ", error);
     }
+  }
+  function editOrigin() {
+    setOriginVisiblity(true);
   }
 
   async function setDestination() {
@@ -91,18 +99,13 @@ function Maps() {
           map.setZoom(15);
         }
       }
+      setDestinationVisiblity(false);
     } catch (error) {
       console.error("Geocoding error: ", error);
     }
   }
-
-  function clearRoute() {
-    setOriginPosition(null);
-    setDestinationPosition(null);
-    originRef.current.value = "";
-    destinationRef.current.value = "";
-    map.setCenter(initialCenter);
-    map.setZoom(10);
+  function editdestination() {
+    setDestinationVisiblity(true);
   }
 
   if (!isLoaded) {
@@ -112,12 +115,12 @@ function Maps() {
   return (
     <Flex
       position="relative"
-      flexDirection="column"
+      flexDirection="row-reverse"
       alignItems="center"
       h="100vh"
       w="100vw"
     >
-      <Box position="absolute" right={0} top={0} h="100%" w="55vw" p={2}>
+      <Box h="100%" w="60%" p={2}>
         <GoogleMap
           zoom={10}
           center={initialCenter}
@@ -165,160 +168,183 @@ function Maps() {
           )}
         </GoogleMap>
       </Box>
-      <Box
-        p={1}
-        borderRadius="sm"
-        m={1}
-        bgColor="white"
-        shadow="base"
-        minW="container.md"
-        zIndex="1"
-        position="absolute"
-        left={0}
-        top={0}
-        w="45%"
-      >
-        <VStack spacing={4} justifyContent="space-between">
-          <Box flexGrow={2} w="80%" m={2} p={4}>
-            <Autocomplete>
-              <Input
-                type="text"
-                placeholder="Origin"
-                ref={originRef}
-                m={2}
-                p={4}
-                borderRadius={0}
-                borderBottom="1px"
-                borderBottomColor="gray"
-                border={0}
-                background="lightgray"
-              />
-            </Autocomplete>
-            <Input
-              type="text"
-              placeholder="More Details / Massage For The Rider"
-              m={2}
-              p={4}
-              borderRadius={0}
-              borderBottom="1px"
-              borderBottomColor="gray"
-              border={0}
-              background="lightgray"
-            />
-            <HStack m={2}>
-              <Input
-                type="number"
-                placeholder="phone number"
-                borderRadius={0}
-                borderBottom="1px"
-                borderBottomColor="gray"
-                border={0}
-                background="lightgray"
-              />
-              <Input
-                type="text"
-                placeholder="sender's name"
-                borderRadius={0}
-                borderBottom="1px"
-                borderBottomColor="gray"
-                border={0}
-                background="lightgray"
-              />
-            </HStack>
-            <Button colorScheme="blue" onClick={setOrigin} m={2}>
-              Set Origin
-            </Button>
-          </Box>
-        </VStack>
-      </Box>
-      <Box
-        p={1}
-        borderRadius="sm"
-        m={1}
-        bgColor="white"
-        shadow="base"
-        minW="container.md"
-        zIndex="1"
-        position="absolute"
-        left={0}
-        top="35%"
-        w="45%"
-      >
-        <VStack>
-          <Box flexGrow={2} w="80%" m={2} p={4}>
-            <Autocomplete>
-              <Input
-                type="text"
-                placeholder="Destination"
-                ref={destinationRef}
-                m={2}
-                p={2}
-                borderRadius={0}
-                borderBottom="1px"
-                borderBottomColor="gray"
-                border={0}
-                background="lightgray"
-              />
-            </Autocomplete>
-            <Input
-              type="text"
-              placeholder="More Details / Massage For The Rider"
-              m={2}
-              p={4}
-              borderRadius={0}
-              borderBottom="1px"
-              borderBottomColor="gray"
-              border={0}
-              background="lightgray"
-            />
-            <HStack m={2}>
-              <Input
-                type="number"
-                placeholder="phone number"
-                borderRadius={0}
-                borderBottom="1px"
-                borderBottomColor="gray"
-                border={0}
-                background="lightgray"
-              />
-              <Input
-                type="text"
-                placeholder="Recipient name"
-                borderRadius={0}
-                borderBottom="1px"
-                borderBottomColor="gray"
-                border={0}
-                background="lightgray"
-              />
-            </HStack>
-            <Button colorScheme="blue" onClick={setDestination} m={2}>
-              Set Destination
-            </Button>
-          </Box>
-        </VStack>
-      </Box>
-      <Box
-        p={1}
-        borderRadius="sm"
-        m={1}
-        bgColor="white"
-        shadow="lg"
-        minW="container.md"
-        zIndex="1"
-        position="absolute"
-        left={0}
-        top="60%"
-        w="45%"
-      >
-        <HStack>
-          <ParcelData onParcelSelect={setSelectedParcel} />
-        </HStack>
-        <PricingButton
-          origin={originPosition}
-          destination={destinationPosition}
-          parcel={selectedParcel}
-        />
-      </Box>
+      <Flex flexDirection="column" alignItems="center" h="100vh" w="40vw">
+        <Box
+          p={1}
+          borderRadius="sm"
+          m={1}
+          bgColor="white"
+          shadow="base"
+          minW="container.md"
+          zIndex="1"
+          w="45%"
+        >
+          {originVisiblity ? (
+            <VStack spacing={4} justifyContent="space-between">
+              <Box flexGrow={2} w="80%" m={2} p={4}>
+                <Autocomplete>
+                  <Input
+                    type="text"
+                    placeholder="Origin"
+                    ref={originRef}
+                    m={2}
+                    p={4}
+                    borderRadius={0}
+                    borderBottom="1px"
+                    borderBottomColor="gray"
+                    border={0}
+                    background="lightgray"
+                  />
+                </Autocomplete>
+
+                <Input
+                  type="text"
+                  placeholder="More Details / Massage For The Rider"
+                  m={2}
+                  p={4}
+                  borderRadius={0}
+                  borderBottom="1px"
+                  borderBottomColor="gray"
+                  border={0}
+                  background="lightgray"
+                />
+                <HStack m={2}>
+                  <Input
+                    type="number"
+                    placeholder="phone number"
+                    borderRadius={0}
+                    borderBottom="1px"
+                    borderBottomColor="gray"
+                    border={0}
+                    background="lightgray"
+                  />
+                  <Input
+                    type="text"
+                    placeholder="sender's name"
+                    borderRadius={0}
+                    borderBottom="1px"
+                    borderBottomColor="gray"
+                    border={0}
+                    background="lightgray"
+                  />
+                </HStack>
+                <Button colorScheme="blue" onClick={setOrigin} m={2}>
+                  Set Origin
+                </Button>
+              </Box>
+            </VStack>
+          ) : (
+            <div>
+              <div>
+                {originRef.current
+                  ? originRef.current.value
+                  : "Please select an origin location!"}
+              </div>
+              <button onClick={editOrigin}>
+                {originRef.current ? "edit" : "select origin"}
+              </button>
+            </div>
+          )}
+        </Box>
+        <Box
+          p={1}
+          borderRadius="sm"
+          m={1}
+          bgColor="white"
+          shadow="base"
+          minW="container.md"
+          zIndex="1"
+          w="45%"
+        >
+          {destinationVisiblity ? (
+            <VStack>
+              <Box flexGrow={2} w="80%" m={2} p={4}>
+                <Autocomplete>
+                  <Input
+                    type="text"
+                    placeholder="Destination"
+                    ref={destinationRef}
+                    m={2}
+                    p={2}
+                    borderRadius={0}
+                    borderBottom="1px"
+                    borderBottomColor="gray"
+                    border={0}
+                    background="lightgray"
+                  />
+                </Autocomplete>
+
+                <Input
+                  type="text"
+                  placeholder="More Details / Massage For The Rider"
+                  m={2}
+                  p={4}
+                  borderRadius={0}
+                  borderBottom="1px"
+                  borderBottomColor="gray"
+                  border={0}
+                  background="lightgray"
+                />
+                <HStack m={2}>
+                  <Input
+                    type="number"
+                    placeholder="phone number"
+                    borderRadius={0}
+                    borderBottom="1px"
+                    borderBottomColor="gray"
+                    border={0}
+                    background="lightgray"
+                  />
+                  <Input
+                    type="text"
+                    placeholder="Recipient name"
+                    borderRadius={0}
+                    borderBottom="1px"
+                    borderBottomColor="gray"
+                    border={0}
+                    background="lightgray"
+                  />
+                </HStack>
+                <Button colorScheme="blue" onClick={setDestination} m={2}>
+                  Set Destination
+                </Button>
+              </Box>
+            </VStack>
+          ) : (
+            <div>
+              <div>
+                {destinationRef.current
+                  ? destinationRef.current.value
+                  : "Please select the destination!"}
+              </div>
+              <button onClick={editdestination}>
+                <div>
+                  {destinationRef.current ? "edit" : "select detination"}
+                </div>
+              </button>
+            </div>
+          )}
+        </Box>
+        <Box
+          p={1}
+          borderRadius="sm"
+          m={1}
+          bgColor="white"
+          shadow="lg"
+          minW="container.md"
+          zIndex="1"
+          w="45%"
+        >
+          <HStack>
+            <ParcelData onParcelSelect={setSelectedParcel} />
+          </HStack>
+          <PricingButton
+            origin={originPosition}
+            destination={destinationPosition}
+            parcel={selectedParcel}
+          />
+        </Box>
+      </Flex>
     </Flex>
   );
 }
