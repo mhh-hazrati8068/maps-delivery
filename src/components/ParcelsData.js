@@ -2,7 +2,7 @@ import app from "../firebaseConfig/firebase";
 import { getFirestore, collection, getDocs } from "firebase/firestore";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { useState, useEffect } from "react";
-import { Box, Image, Text, SimpleGrid, Spinner } from "@chakra-ui/react";
+import { Box, Image, Text, Flex, Spinner, Center } from "@chakra-ui/react";
 
 const ParcelData = ({ onParcelSelect }) => {
   const [data, setData] = useState([]);
@@ -27,28 +27,7 @@ const ParcelData = ({ onParcelSelect }) => {
                 const url = await getDownloadURL(imageRef);
                 return url;
               } catch (error) {
-                switch (error.code) {
-                  case "storage/object-not-found":
-                    console.error("File does not exist:", item.parcel_img_url);
-                    break;
-                  case "storage/unauthorized":
-                    console.error(
-                      "User does not have permission to access the file:",
-                      item.parcel_img_url
-                    );
-                    break;
-                  case "storage/canceled":
-                    console.error(
-                      "User canceled the upload:",
-                      item.parcel_img_url
-                    );
-                    break;
-                  case "storage/unknown":
-                    console.error("Unknown error occurred:", error.message);
-                    break;
-                  default:
-                    console.error("Error fetching image:", error);
-                }
+                console.error("Error fetching image:", error);
                 return null;
               }
             }
@@ -76,30 +55,57 @@ const ParcelData = ({ onParcelSelect }) => {
   }
 
   return (
-    <SimpleGrid columns={[1, 2, 3]} spacing={4}>
-      {data.map((item, index) => (
-        <Box
-          key={index}
-          p={4}
-          borderWidth="1px"
-          borderRadius="lg"
-          overflow="hidden"
-          boxShadow="md"
-          cursor="pointer"
-          onClick={() => handleParcelSelect(item)}
-          _hover={{ bg: "gray.100" }} // Add hover effect
-        >
-          {imageUrls[index] && (
-            <Image src={imageUrls[index]} alt="Parcel Image" mb={4} />
-          )}
-          <Text fontWeight="bold">{item.parcel_type}</Text>
-          <Text>{item.parcel_description}</Text>
-          <Text fontSize="sm" color="gray.500">
-            Weight: {item.parcel_min_weight}kg - {item.parcel_max_weight}kg
-          </Text>
-        </Box>
-      ))}
-    </SimpleGrid>
+    <Flex direction="column" align="center" w="100%">
+      <Box
+        w="100%"
+        p={4}
+        borderWidth="1px"
+        borderRadius="lg"
+        overflow="hidden"
+        boxShadow="md"
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+      >
+        {data.map((item, index) => (
+          <Box
+            key={index}
+            p={4}
+            w="90%"
+            borderWidth="1px"
+            borderRadius={0}
+            overflow="hidden"
+            boxShadow="md"
+            cursor="pointer"
+            onClick={() => handleParcelSelect(item)}
+            _hover={{ bg: "gray.100" }} // Add hover effect
+            mb={4}
+          >
+            <Flex align="center">
+              {imageUrls[index] && (
+                <Image
+                  src={imageUrls[index]}
+                  alt="Parcel Image"
+                  boxSize="100px"
+                  objectFit="cover"
+                  mr={4}
+                />
+              )}
+              <Flex direction="column">
+                <Text fontWeight="bold" mb={2}>
+                  {item.parcel_type}
+                </Text>
+                <Text mb={2}>{item.parcel_description}</Text>
+                <Text fontSize="sm" color="gray.500">
+                  {item.parcel_min_weight}kg - {item.parcel_max_weight}
+                  kg
+                </Text>
+              </Flex>
+            </Flex>
+          </Box>
+        ))}
+      </Box>
+    </Flex>
   );
 };
 
