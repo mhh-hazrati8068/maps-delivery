@@ -1,4 +1,3 @@
-// PricingButton.js
 import { Button } from "@chakra-ui/react";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { useState } from "react";
@@ -17,7 +16,7 @@ const PricingButton = ({ origin, destination, parcel }) => {
     setError(null);
 
     try {
-      const functions = getFunctions(); // Get Firebase functions instance
+      const functions = getFunctions(); // get Firebase functions instance (by other words i meant to include the methods in my app)
       const pricing = httpsCallable(functions, "pricing"); // Create callable function
 
       const data = {
@@ -30,12 +29,12 @@ const PricingButton = ({ origin, destination, parcel }) => {
         parcel_max_weight: parcel.parcel_max_weight,
       };
 
-      const result = await pricing(data); // Call the function with data
+      const result = await pricing(data); // call the function with given datas
       console.log("Pricing result: ", result.data);
-      // Handle the result (e.g., display the price to the user)
+      // display the price to the user
     } catch (error) {
-      console.error("Error calling pricing function: ", error);
-      setError("Failed to calculate price. Please try again.");
+      console.error("in calling pricing function: ", error);
+      setError("Failed to calculate price. Please try again!!!!");
     } finally {
       setLoading(false);
     }

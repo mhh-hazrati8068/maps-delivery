@@ -7,7 +7,7 @@ import { Box, Image, Text, Flex, Spinner, Center } from "@chakra-ui/react";
 const ParcelData = ({ onParcelSelect }) => {
   const [data, setData] = useState([]);
   const [imageUrls, setImageUrls] = useState([]);
-  const [loading, setLoading] = useState(true); // State to track loading
+  const [loading, setLoading] = useState(true); // state for track loading
   const db = getFirestore(app);
   const storage = getStorage(app);
 
@@ -18,7 +18,7 @@ const ParcelData = ({ onParcelSelect }) => {
         const dataItems = querySnapshot.docs.map((doc) => doc.data());
         setData(dataItems);
 
-        // Fetch images
+        // fetch images based on firebase documentationsss
         const urls = await Promise.all(
           dataItems.map(async (item) => {
             if (item.parcel_img_url) {
@@ -27,7 +27,7 @@ const ParcelData = ({ onParcelSelect }) => {
                 const url = await getDownloadURL(imageRef);
                 return url;
               } catch (error) {
-                console.error("Error fetching image:", error);
+                console.error("in fetching image:", error);
                 return null;
               }
             }
@@ -37,9 +37,9 @@ const ParcelData = ({ onParcelSelect }) => {
 
         setImageUrls(urls);
       } catch (error) {
-        console.error("Error fetching data from Firestore:", error);
+        console.error("in fetching data from Firestore:", error);
       } finally {
-        setLoading(false); // Set loading to false after fetching
+        setLoading(false); // set loading to false after fetching
       }
     };
 
@@ -47,7 +47,7 @@ const ParcelData = ({ onParcelSelect }) => {
   }, [db, storage]);
 
   const handleParcelSelect = (parcel) => {
-    onParcelSelect(parcel); // Pass the selected parcel data to the parent component
+    onParcelSelect(parcel); // pass the selected parcel data to the parent component
   };
 
   if (loading) {
@@ -78,7 +78,7 @@ const ParcelData = ({ onParcelSelect }) => {
             boxShadow="md"
             cursor="pointer"
             onClick={() => handleParcelSelect(item)}
-            _hover={{ bg: "gray.100" }} // Add hover effect
+            _hover={{ bg: "gray.100" }} // effect just for neatness fellings
             mb={4}
           >
             <Flex align="center">

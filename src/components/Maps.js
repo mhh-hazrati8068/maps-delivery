@@ -64,7 +64,7 @@ function Maps() {
       }
       setOriginVisiblity(false);
     } catch (error) {
-      console.error("Geocoding error: ", error);
+      console.error("in Geocoding error: ", error);
     }
   }
   function editOrigin() {
@@ -101,7 +101,7 @@ function Maps() {
       }
       setDestinationVisiblity(false);
     } catch (error) {
-      console.error("Geocoding error: ", error);
+      console.error("in Geocoding error: ", error);
     }
   }
   function editdestination() {
