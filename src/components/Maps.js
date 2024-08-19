@@ -18,6 +18,7 @@ import {
 import { useRef, useState, useCallback } from "react";
 import ParcelData from "./ParcelsData";
 import PricingButton from "./Pricing";
+import PricingInfo from "./PricingResualt";
 
 const apiKey = "AIzaSyASGf3xaQKOEsMZaYET96y4yh0GI9oI4pk";
 
@@ -42,6 +43,8 @@ function Maps() {
 
   const [selectedParcel, setSelectedParcel] = useState(null); // State to cache the selected parcel
   const [isEditingParcel, setIsEditingParcel] = useState(false);
+
+  const [pricingData, setPricingData] = useState(null);
 
   const originRef = useRef();
   const destinationRef = useRef();
@@ -120,6 +123,10 @@ function Maps() {
 
   const handleEditParcelChange = (isEditing) => {
     setIsEditingParcel(isEditing); // Update the state when editParcel changes
+  };
+
+  const handlePricingSuccess = (data) => {
+    setPricingData(data);
   };
 
   if (!isLoaded) {
@@ -339,7 +346,7 @@ function Maps() {
             <Flex
               w="100%"
               p={4}
-              justifyContent="space-between" // This places items on opposite sides
+              justifyContent="space-between"
               alignItems="center"
             >
               <Text fontSize="lg">
@@ -372,9 +379,29 @@ function Maps() {
               origin={originPosition}
               destination={destinationPosition}
               parcel={selectedParcel}
+              onSuccess={handlePricingSuccess}
             />
           )}
         </Box>
+        {pricingData ? (
+          <PricingInfo pricingData={pricingData} />
+        ) : (
+          <Flex
+            p={4}
+            borderRadius="sm"
+            m={1}
+            bgColor="white"
+            shadow="lg"
+            minW="container.md"
+            zIndex="1"
+            w="45%"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Text fontSize="lg">Transport Options!</Text>
+            <button onClick={editdestination}>Edit</button>
+          </Flex>
+        )}
       </Flex>
     </Flex>
   );

@@ -51,6 +51,10 @@ const ParcelData = ({ onParcelSelect, onEditParcelChange }) => {
     setEditParcel(true);
     onEditParcelChange(true);
   }
+  function handleCloseParcel() {
+    setEditParcel(false);
+    onEditParcelChange(false);
+  }
 
   const handleParcelSelect = (parcel) => {
     setSelectedParcel(parcel); // Set the selected parcel
@@ -67,6 +71,7 @@ const ParcelData = ({ onParcelSelect, onEditParcelChange }) => {
         <Box
           w="100%"
           p={4}
+          position="relative"
           backgroundColor="transparent"
           border={0}
           overflow="hidden"
@@ -101,18 +106,10 @@ const ParcelData = ({ onParcelSelect, onEditParcelChange }) => {
                   justifyContent="center"
                 >
                   {imageUrls[index] && (
-                    <Image
-                      src={imageUrls[index]}
-                      alt="Parcel Image"
-                    />
+                    <Image src={imageUrls[index]} alt="Parcel Image" />
                   )}
                 </Box>
-                <Flex
-                  direction="row"
-                  justifyContent="space-between"
-                  w="100%"
-                  
-                >
+                <Flex direction="row" justifyContent="space-between" w="100%">
                   <Text fontWeight="bold" fontSize="xl" alignItems="flex-start">
                     {item.parcel_type} {/* Increased font size */}
                   </Text>
@@ -126,6 +123,13 @@ const ParcelData = ({ onParcelSelect, onEditParcelChange }) => {
               </Flex>
             </Box>
           ))}
+          <Text
+            fontSize="lg"
+            cursor="pointer"
+            onClick={handleCloseParcel}
+          >
+            Close
+          </Text>
         </Box>
       ) : (
         <Flex w="100%" p={4} justifyContent="space-between" alignItems="center">
