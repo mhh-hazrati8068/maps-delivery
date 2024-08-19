@@ -3,9 +3,8 @@ import { Box, Text, VStack, Image, HStack, Flex } from "@chakra-ui/react";
 import walkingImage from "../assets/walk2.png";
 import ridingImage from "../assets/motor.png";
 import cyclingImage from "../assets/bike.png";
-import defaultImage from "../assets/walk2.png"; // Add a default image
+import defaultImage from "../assets/walk2.png";
 
-// Define the mode images
 const modeImages = {
   walking: walkingImage,
   riding: ridingImage,
@@ -25,9 +24,9 @@ const PricingInfo = ({ pricingData }) => {
       alignItems="center"
     >
       {Object.keys(modeImages).map((mode) => {
-        const data = pricingData ? pricingData[mode] : null; // Handle if pricingData is undefined
+        const data = pricingData ? pricingData[mode] : null; // hhandle if pricingData is undefined
 
-        // Use default image if mode is not in modeImages or if pricingData is empty
+        // use default image if mode is not in modeImages or if pricingData is empty which we dont have but we set it up just in case for error handling
         const imageSrc = modeImages[mode] || defaultImage;
 
         return (

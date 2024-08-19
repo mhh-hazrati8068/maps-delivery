@@ -106,7 +106,7 @@ function Maps() {
           const bounds = new google.maps.LatLngBounds();
           bounds.extend(originPosition);
           bounds.extend(destinationLatLng);
-          map.fitBounds(bounds); // Adjust view to include both markers
+          map.fitBounds(bounds); // adjust view to include both markers
         } else {
           map.panTo(destinationLatLng);
           map.setZoom(15);
@@ -122,7 +122,7 @@ function Maps() {
   }
 
   const handleEditParcelChange = (isEditing) => {
-    setIsEditingParcel(isEditing); // Update the state when editParcel changes
+    setIsEditingParcel(isEditing); // updates the state when editParcel changes
   };
 
   const handlePricingSuccess = (data) => {
@@ -262,7 +262,7 @@ function Maps() {
             <Flex
               w="100%"
               p={4}
-              justifyContent="space-between" // This places items on opposite sides
+              justifyContent="space-between"
               alignItems="center"
             >
               <Text fontSize="lg">
